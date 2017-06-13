@@ -4,4 +4,6 @@ import RemoteData exposing (WebData)
 
 import Model exposing (AstroData)
 
-type Message = OnFetchAstroData (WebData AstroData) | QueryAstroData
+type Message = FetchAstroData
+              | FetchAstroDataSuccess AstroData
+              | FetchAstroDataError String

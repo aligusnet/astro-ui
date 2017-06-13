@@ -1,6 +1,7 @@
 module Model exposing (..)
 
-import RemoteData exposing (WebData)
+import RemoteData
+import Date
 
 type alias SetRise =
   { rise: Maybe String
@@ -13,7 +14,7 @@ type alias AstroData =
 
 
 type alias Model =
-  { astro : WebData AstroData
+  { astro : RemoteData.RemoteData String AstroData
   , request : AstroRequest
   }
 

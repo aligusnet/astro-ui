@@ -2,6 +2,7 @@ module Main exposing (..)
 
 import Html
 
+import AWS.Lambda
 import Model
 import Message
 import View
@@ -13,7 +14,10 @@ init = ( Model.initialModel, Cmd.none )
 
 
 subscriptions : Model.Model -> Sub Message.Message
-subscriptions model = Sub.none
+subscriptions model = Sub.batch
+  [ AWS.Lambda.fetchAstroDataSuccess Message.FetchAstroDataSuccess
+  , AWS.Lambda.fetchAstroDataError Message.FetchAstroDataError
+  ]
 
 
 main : Program Never Model.Model Message.Message

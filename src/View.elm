@@ -10,7 +10,7 @@ import Message
 view : Model.Model -> Html Message.Message
 view model =
     div []
-        [ button [ onClick Message.QueryAstroData ] [ text "Query" ]
+        [ button [ onClick Message.FetchAstroData ] [ text "Query" ]
         , case model.astro of
             RemoteData.NotAsked -> text "Please request for astro data"
             RemoteData.Loading -> text "Please wait, astro data is loading..."
