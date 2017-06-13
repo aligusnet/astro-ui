@@ -12,4 +12,4 @@ update msg model =
         Message.OnFetchAstroData response ->
             ( { model | astro = response }, Cmd.none )
         Message.QueryAstroData ->
-            ( { model | astro = RemoteData.Loading }, Command.fetchAstroData )
+            ( { model | astro = RemoteData.Loading }, Command.fetchAstroData model )

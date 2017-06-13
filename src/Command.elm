@@ -9,21 +9,29 @@ import Message
 import Model
 
 
-fetchAstroData : Cmd Message.Message
-fetchAstroData =
-  Http.post astroUrl (Http.jsonBody request) astroDataDecoder
+fetchAstroData : Model.Model -> Cmd Message.Message
+fetchAstroData model =
+  Http.post astroUrl (Http.jsonBody (encodeRequest model.request)) astroDataDecoder
     |> RemoteData.sendRequest
     |> Cmd.map Message.OnFetchAstroData
 
 
-request : Encode.Value
-request = Encode.object
-  [ ("coordinates", Encode.object
-    [ ("latitude", Encode.float 51)
-    , ("longitude", Encode.float 0)
-    ])
-    , ("datetime", Encode.string "2017-05-10T12:12:12.111111+01:00")
+encodeRequest : Model.AstroRequest -> Encode.Value
+encodeRequest request = Encode.object
+  [ ("coordinates", encodeCoordinates request.coordinates)
+    , ("datetime", encodeDateTime request.datetime)
   ]
+
+
+encodeCoordinates : Model.Coordinates -> Encode.Value
+encodeCoordinates coords = Encode.object
+  [ ("latitude", Encode.float coords.latitude)
+  , ("longitude", Encode.float coords.longitude)
+  ]
+
+
+encodeDateTime : String -> Encode.Value
+encodeDateTime dt = Encode.string dt
 
 
 astroUrl : String
