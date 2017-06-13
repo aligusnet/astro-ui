@@ -8,7 +8,6 @@ import Json.Decode.Pipeline exposing (decode, required, optional)
 import Message
 import Model
 
-import Model
 
 fetchAstroData : Cmd Message.Message
 fetchAstroData =
@@ -25,6 +24,7 @@ request = Encode.object
     ])
     , ("datetime", Encode.string "2017-05-10T12:12:12.111111+01:00")
   ]
+
 
 astroUrl : String
 astroUrl = "https://nzribavfdd.execute-api.us-east-1.amazonaws.com/dev/astro/"
