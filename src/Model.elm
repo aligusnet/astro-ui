@@ -9,8 +9,8 @@ type Error = BadStatus String
 
 
 type alias SetRise =
-  { rise: Maybe String
-  , set: Maybe String
+  { rise: Maybe Date.Date
+  , set: Maybe Date.Date
   }
 
 

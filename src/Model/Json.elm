@@ -2,6 +2,7 @@ module Model.Json exposing (encodeRequest, decodeAstroData)
 
 import Json.Encode as Encode
 import Json.Decode as Decode
+import Json.Decode.Extra as DecodeExtra
 import Json.Decode.Pipeline exposing (decode, required, optional)
 import Model
 
@@ -39,5 +40,5 @@ astroDataDecoder = decode Model.AstroData
 
 setRiseDecode : Decode.Decoder (Model.SetRise)
 setRiseDecode = decode Model.SetRise
-  |> optional "rise" (Decode.nullable Decode.string) Nothing
-  |> optional "set" (Decode.nullable Decode.string) Nothing
+  |> optional "rise" (Decode.nullable DecodeExtra.date) Nothing
+  |> optional "set" (Decode.nullable DecodeExtra.date) Nothing
