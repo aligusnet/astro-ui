@@ -5,5 +5,5 @@ import RemoteData exposing (WebData)
 import Model exposing (AstroData)
 
 type Message = FetchAstroData
-              | FetchAstroDataSuccess AstroData
+              | FetchAstroDataSuccess String
               | FetchAstroDataError String

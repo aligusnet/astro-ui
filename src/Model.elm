@@ -3,6 +3,11 @@ module Model exposing (..)
 import RemoteData
 import Date
 
+
+type Error = BadStatus String
+            | BadPayload String
+
+
 type alias SetRise =
   { rise: Maybe String
   , set: Maybe String
@@ -14,7 +19,7 @@ type alias AstroData =
 
 
 type alias Model =
-  { astro : RemoteData.RemoteData String AstroData
+  { astro : RemoteData.RemoteData Error AstroData
   , request : AstroRequest
   }
 

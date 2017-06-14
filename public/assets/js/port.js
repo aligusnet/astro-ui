@@ -6,6 +6,7 @@ const lambda = new AWS.Lambda({region: 'us-east-1', apiVersion: '2015-03-31'});
 let app = Elm.Main.fullscreen();
 
 app.ports.fetchAstroData.subscribe(function(request) {
+  console.log(JSON.stringify(request));
   const pullParams = {
     FunctionName : 'astro',
     InvocationType : 'RequestResponse',
@@ -17,7 +18,7 @@ app.ports.fetchAstroData.subscribe(function(request) {
     if (error) {
       app.ports.fetchAstroDataError.send(error.message);
     } else {
-      app.ports.fetchAstroDataSuccess.send(JSON.parse(data.Payload));
+      app.ports.fetchAstroDataSuccess.send(data.Payload);
     }
   });
 });
