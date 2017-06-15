@@ -1,14 +1,15 @@
 module View exposing (view)
 
-import Html exposing (Html, div, text, program, button)
+import Html exposing (Html, div, text, program, button, h1, h2)
 import Html.Events exposing (onClick)
 import RemoteData
+import Date
 import DateTimePicker
 import DateTimePicker.Config exposing (Config, DatePickerConfig
                                       , TimePickerConfig
                                       , defaultDateTimePickerConfig
                                       , defaultDateTimeI18n)
-import Date.Extra.Format
+import Date.Extra.Format as DateFormatter
 import Date.Extra.Config.Config_en_gb exposing (config)
 import DateParser
 
@@ -19,7 +20,8 @@ import Message
 view : Model.Model -> Html Message.Message
 view model =
     div []
-        [ div []
+        [ h1 [] [ text "Astro UI" ]
+        , div []
               [ button [ onClick Message.FetchAstroData ]
                        [ text "Query" ]
               ]
@@ -43,7 +45,30 @@ viewRemoteAstroData rad = case rad of
 
 
 viewAstroData : Model.AstroData -> Html Message.Message
-viewAstroData astro = text (toString astro)
+viewAstroData astro =
+  div []
+      [ h2 [] [ text "Sun" ]
+      , viewSetRise astro.sun
+      ]
+
+
+viewSetRise : Model.SetRise -> Html Message.Message
+viewSetRise setRise =
+  div []
+      [ div []
+            [ text "Rise: "
+            , text (formatMaybeDateTime setRise.rise) ]
+      , div []
+            [ text "Set: "
+            , text (formatMaybeDateTime setRise.set) ]
+      ]
+
+
+formatMaybeDateTime : Maybe Date.Date -> String
+formatMaybeDateTime mbDT =
+  case mbDT of
+    Just dt -> DateFormatter.format config customDatePattern dt
+    Nothing -> "--"
 
 
 viewDateTimePicker : Model.Model -> Html Message.Message
@@ -72,6 +97,6 @@ customDatePattern = "%d/%m/%Y %H:%M"
 
 customInputFormat : DateTimePicker.Config.InputFormat
 customInputFormat =
-    { inputFormatter = Date.Extra.Format.format config customDatePattern
+    { inputFormatter = DateFormatter.format config customDatePattern
     , inputParser = DateParser.parse config customDatePattern >> Result.toMaybe
     }
