@@ -9,3 +9,5 @@ type Message = FetchAstroData
               | DateChange DateTimePicker.State (Maybe Date.Date)
               | RequestCurrentDate
               | ReceiveCurrentDate Date.Date
+              | LatitudeChange String
+              | LongitudeChange String

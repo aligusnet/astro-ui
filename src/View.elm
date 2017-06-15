@@ -1,7 +1,8 @@
 module View exposing (view)
 
-import Html exposing (Html, div, text, program, button, h1, h2)
-import Html.Events exposing (onClick)
+import Html exposing (Html, div, text, program, button, input, h1, h2)
+import Html.Events exposing (onClick, onInput)
+import Html.Attributes as Attr
 import RemoteData
 import Date
 import DateTimePicker
@@ -20,17 +21,37 @@ import Message
 view : Model.Model -> Html Message.Message
 view model =
     div []
-        [ h1 [] [ text "Astro UI" ]
-        , div []
-              [ button [ onClick Message.FetchAstroData ]
-                       [ text "Query" ]
-              ]
+        [ h1 [] [ text "Astro" ]
         , div []
               [ button [ onClick Message.RequestCurrentDate ]
                        [ text "Now" ]
               ]
         , div []
               [ viewDateTimePicker model ]
+        , div []
+              [ text "latitude:"
+              , input [ Attr.type_ "number"
+                      , Attr.max "90.0"
+                      , Attr.min "-90.0"
+                      , Attr.value (toString model.latitude)
+                      , onInput Message.LatitudeChange
+                      ]
+                      [ text (toString model.latitude) ]
+              ]
+          , div []
+                [ text "longitude:"
+                , input [ Attr.type_ "number"
+                        , Attr.max "180.0"
+                        , Attr.min "-180.0"
+                        , Attr.value (toString model.longitude)
+                        , onInput Message.LongitudeChange
+                        ]
+                        [ text (toString model.latitude) ]
+                ]
+        , div []
+              [ button [ onClick Message.FetchAstroData ]
+                       [ text "Query" ]
+              ]
         , div []
               [ viewRemoteAstroData model.astro ]
         ]
@@ -61,6 +82,8 @@ viewSetRise setRise =
       , div []
             [ text "Set: "
             , text (formatMaybeDateTime setRise.set) ]
+      , div []
+            [ text "Please note that rise and set are shown in your local time for the given date."]
       ]
 
 
