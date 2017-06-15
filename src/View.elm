@@ -110,6 +110,7 @@ dateTimePickerConfig =
     in { defaultDateTimeConfig
           | timePickerType = DateTimePicker.Config.Analog
           , allowYearNavigation = True
+          , firstDayOfWeek = Date.Mon
           , i18n = { defaultDateTimeI18n | inputFormat = customInputFormat }
        }
 
