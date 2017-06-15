@@ -1,7 +1,9 @@
 module Model exposing (..)
 
-import RemoteData
 import Date
+import Time
+import RemoteData
+import DateTimePicker
 
 
 type Error = BadStatus String
@@ -18,30 +20,25 @@ type alias AstroData =
   { sun: SetRise }
 
 
+type alias RemoteAstroData = RemoteData.RemoteData Error AstroData
+
+
 type alias Model =
-  { astro : RemoteData.RemoteData Error AstroData
-  , request : AstroRequest
-  }
-
-
-type alias Coordinates =
-  { latitude: Float
+  { astro : RemoteAstroData
+  , latitude: Float
   , longitude: Float
-  }
-
-
-type alias AstroRequest =
-  { coordinates: Coordinates
-  , datetime: String
-  }
-
-
-defaultRequest : AstroRequest
-defaultRequest =
-  { coordinates = {latitude=51, longitude=0}
-  , datetime = "2017-05-10T12:12:12.111111+01:00"
+  , datetime : Date.Date
+  , datePickerState : DateTimePicker.State
   }
 
 
 initialModel : Model
-initialModel = Model RemoteData.NotAsked defaultRequest
+initialModel =
+  { astro = RemoteData.NotAsked
+  -- coordinates of Royal Observatory, Greenwich:
+  , latitude=51.4769
+  , longitude=0.0005
+  -- Grandma's birthday
+  , datetime = Date.fromTime (-1563105600000)
+  , datePickerState = DateTimePicker.initialState
+  }

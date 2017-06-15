@@ -1,32 +1,35 @@
 module Model.Json exposing (encodeRequest, decodeAstroData)
 
+import Date
+import Date.Extra.Format as DateFormat
 import Json.Encode as Encode
 import Json.Decode as Decode
 import Json.Decode.Extra as DecodeExtra
 import Json.Decode.Pipeline exposing (decode, required, optional)
+
 import Model
 
 
-encodeRequest : Model.AstroRequest -> String
+encodeRequest : Model.Model -> String
 encodeRequest request = Encode.encode 0 (requestEncoder request)
 
 
-requestEncoder : Model.AstroRequest -> Encode.Value
-requestEncoder request = Encode.object
-  [ ("coordinates", coordinatesEncoder request.coordinates)
-    , ("datetime", dateTimeEncoder request.datetime)
+requestEncoder : Model.Model -> Encode.Value
+requestEncoder model = Encode.object
+  [ ("coordinates", coordinatesEncoder model)
+    , ("datetime", dateTimeEncoder model.datetime)
   ]
 
 
-coordinatesEncoder : Model.Coordinates -> Encode.Value
-coordinatesEncoder coords = Encode.object
-  [ ("latitude", Encode.float coords.latitude)
-  , ("longitude", Encode.float coords.longitude)
+coordinatesEncoder : Model.Model -> Encode.Value
+coordinatesEncoder model = Encode.object
+  [ ("latitude", Encode.float model.latitude)
+  , ("longitude", Encode.float model.longitude)
   ]
 
 
-dateTimeEncoder : String -> Encode.Value
-dateTimeEncoder dt = Encode.string dt
+dateTimeEncoder : Date.Date -> Encode.Value
+dateTimeEncoder date = Encode.string (DateFormat.isoString date)
 
 
 decodeAstroData : String -> Result String Model.AstroData

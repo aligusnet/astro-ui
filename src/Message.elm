@@ -1,9 +1,11 @@
 module Message exposing (..)
 
-import RemoteData exposing (WebData)
-
-import Model exposing (AstroData)
+import DateTimePicker
+import Date
 
 type Message = FetchAstroData
               | FetchAstroDataSuccess String
               | FetchAstroDataError String
+              | DateChange DateTimePicker.State (Maybe Date.Date)
+              | RequestCurrentDate
+              | ReceiveCurrentDate Date.Date

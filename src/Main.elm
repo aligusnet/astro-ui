@@ -3,6 +3,7 @@ module Main exposing (..)
 import Html
 
 import AWS.Lambda
+import Command
 import Model
 import Message
 import View
@@ -10,7 +11,7 @@ import Update
 
 
 init : ( Model.Model, Cmd Message.Message )
-init = ( Model.initialModel, Cmd.none )
+init = ( Model.initialModel, Command.init )
 
 
 subscriptions : Model.Model -> Sub Message.Message
