@@ -68,8 +68,15 @@ viewRemoteAstroData rad = case rad of
 viewAstroData : Model.AstroData -> Html Message.Message
 viewAstroData astro =
   div []
-      [ h2 [] [ text "Sun" ]
-      , viewSetRise astro.sun
+      [ h2 [] [ text "Sun" ], viewSetRise astro.sun
+      , h2 [] [ text "Moon" ], viewSetRise astro.moon
+      , h2 [] [ text "Mercury" ], viewSetRise astro.mercury
+      , h2 [] [ text "Venus" ], viewSetRise astro.venus
+      , h2 [] [ text "Mars" ], viewSetRise astro.mars
+      , h2 [] [ text "Jupiter" ], viewSetRise astro.jupiter
+      , h2 [] [ text "Saturn" ], viewSetRise astro.saturn
+      , h2 [] [ text "Uranus" ], viewSetRise astro.uranus
+      , h2 [] [ text "Neptune" ], viewSetRise astro.neptune
       ]
 
 
@@ -83,7 +90,8 @@ viewSetRise setRise =
             [ text "Set: "
             , text (formatMaybeDateTime setRise.set) ]
       , div []
-            [ text "Please note that rise and set are shown in your local time for the given date."]
+            [ text "State: "
+            , text setRise.state ]
       ]
 
 

@@ -39,9 +39,18 @@ decodeAstroData str = Decode.decodeString astroDataDecoder str
 astroDataDecoder : Decode.Decoder (Model.AstroData)
 astroDataDecoder = decode Model.AstroData
   |> required "sun" setRiseDecode
+  |> required "moon" setRiseDecode
+  |> required "mercury" setRiseDecode
+  |> required "venus" setRiseDecode
+  |> required "mars" setRiseDecode
+  |> required "jupiter" setRiseDecode
+  |> required "saturn" setRiseDecode
+  |> required "uranus" setRiseDecode
+  |> required "neptune" setRiseDecode
 
 
 setRiseDecode : Decode.Decoder (Model.SetRise)
 setRiseDecode = decode Model.SetRise
   |> optional "rise" (Decode.nullable DecodeExtra.date) Nothing
   |> optional "set" (Decode.nullable DecodeExtra.date) Nothing
+  |> required "state" Decode.string

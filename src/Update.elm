@@ -1,6 +1,5 @@
 module Update exposing (update)
 
-import Date
 import RemoteData
 
 import Command

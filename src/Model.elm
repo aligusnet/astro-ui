@@ -1,7 +1,6 @@
 module Model exposing (..)
 
 import Date
-import Time
 import RemoteData
 import DateTimePicker
 
@@ -13,11 +12,21 @@ type Error = BadStatus String
 type alias SetRise =
   { rise: Maybe Date.Date
   , set: Maybe Date.Date
+  , state: String
   }
 
 
 type alias AstroData =
-  { sun: SetRise }
+  { sun: SetRise
+  , moon: SetRise
+  , mercury: SetRise
+  , venus: SetRise
+  , mars: SetRise
+  , jupiter: SetRise
+  , saturn: SetRise
+  , uranus: SetRise
+  , neptune: SetRise
+  }
 
 
 type alias RemoteAstroData = RemoteData.RemoteData Error AstroData
