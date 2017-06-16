@@ -90,7 +90,7 @@ viewSetRise setRise =
 formatMaybeDateTime : Maybe Date.Date -> String
 formatMaybeDateTime mbDT =
   case mbDT of
-    Just dt -> DateFormatter.format config customDatePattern dt
+    Just dt -> DateFormatter.format config "%d/%m/%Y %H:%M %z" dt
     Nothing -> "--"
 
 
