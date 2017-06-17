@@ -89,6 +89,12 @@ viewAstroData astro =
       , h3 [] [ text "Polaris" ], viewStar astro.polaris
       , h3 [] [ text "Alpha Crucis" ], viewStar astro.alphaCrucis
       , h3 [] [ text "Sirius" ], viewStar astro.sirius
+      , h3 [] [ text "Betelgeuse" ], viewStar astro.betelgeuse
+      , h3 [] [ text "Rigel" ], viewStar astro.rigel
+      , h3 [] [ text "Vega" ], viewStar astro.vega
+      , h3 [] [ text "Antares" ], viewStar astro.antares
+      , h3 [] [ text "Canopus" ], viewStar astro.canopus
+      , h3 [] [ text "Pleiades" ], viewStar astro.pleiades
       ]
 
 

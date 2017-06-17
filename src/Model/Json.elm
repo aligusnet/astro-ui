@@ -50,6 +50,12 @@ astroDataDecoder = decode Model.AstroData
   |> required "polaris" starDecoder
   |> required "alphaCrucis" starDecoder
   |> required "sirius" starDecoder
+  |> required "betelgeuse" starDecoder
+  |> required "rigel" starDecoder
+  |> required "vega" starDecoder
+  |> required "antares" starDecoder
+  |> required "canopus" starDecoder
+  |> required "pleiades" starDecoder
 
 
 planetaiDecoder : Decode.Decoder (Model.Planetai)

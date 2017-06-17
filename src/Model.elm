@@ -55,6 +55,12 @@ type alias AstroData =
   , polaris: Star
   , alphaCrucis: Star
   , sirius: Star
+  , betelgeuse: Star
+  , rigel: Star
+  , vega: Star
+  , antares: Star
+  , canopus: Star
+  , pleiades: Star
   }
 
 
