@@ -22,3 +22,14 @@ app.ports.fetchAstroData.subscribe(function(request) {
     }
   });
 });
+
+app.ports.getPosition.subscribe(function() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(function(position) {
+      console.log("geolocation", position.coords);
+      app.ports.getPositionSuccess.send(position.coords);
+    });
+  } else {
+    app.ports.getPositionError.send("Geolocation is not supported");
+  }
+});

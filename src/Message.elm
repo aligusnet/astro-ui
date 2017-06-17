@@ -11,3 +11,6 @@ type Message = FetchAstroData
               | ReceiveCurrentDate Date.Date
               | LatitudeChange String
               | LongitudeChange String
+              | GetGeolocation
+              | GetGeolocationSuccess {latitude: Float, longitude: Float}
+              | GetGeolocationError String

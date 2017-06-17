@@ -35,6 +35,12 @@ update msg model =
             case parseLongitude strLong of
               Ok longitude -> ( { model | longitude = longitude }, Cmd.none)
               Err _ -> ( model, Cmd.none )
+        Message.GetGeolocation ->
+              ( model, Command.getGeolocation )
+        Message.GetGeolocationSuccess location ->
+          ( { model | latitude = location.latitude, longitude = location.longitude }, Cmd.none )
+        Message.GetGeolocationError error ->
+          ( model, Cmd.none )
 
 
 parseLatitude : String -> Result String Float

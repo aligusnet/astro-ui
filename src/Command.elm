@@ -5,6 +5,7 @@ import Task
 import DateTimePicker
 
 import AWS.Lambda
+import Geolocation
 import Message
 import Model
 import Model.Json as Json
@@ -24,3 +25,7 @@ initDateTimePicker = DateTimePicker.initialCmd Message.DateChange DateTimePicker
 
 init : Cmd Message.Message
 init = Cmd.batch [ receiveCurrentDate, initDateTimePicker ]
+
+
+getGeolocation : Cmd Message.Message
+getGeolocation = Geolocation.getPosition ()

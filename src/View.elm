@@ -1,6 +1,6 @@
 module View exposing (view)
 
-import Html exposing (Html, div, text, program, button, input, h1, h2, h3)
+import Html exposing (Html, div, text, program, button, input, h1, h2, h3, p)
 import Html.Events exposing (onClick, onInput)
 import Html.Attributes as Attr
 import RemoteData
@@ -39,16 +39,22 @@ view model =
                       ]
                       [ text (toString model.latitude) ]
               ]
-          , div []
-                [ text "longitude:"
-                , input [ Attr.type_ "number"
-                        , Attr.max "180.0"
-                        , Attr.min "-180.0"
-                        , Attr.value (toString model.longitude)
-                        , onInput Message.LongitudeChange
-                        ]
-                        [ text (toString model.latitude) ]
-                ]
+        , div []
+              [ text "longitude:"
+              , input [ Attr.type_ "number"
+                      , Attr.max "180.0"
+                      , Attr.min "-180.0"
+                      , Attr.value (toString model.longitude)
+                      , onInput Message.LongitudeChange
+                      ]
+                      [ text (toString model.latitude) ]
+              ]
+        , div []
+              [ button [ onClick Message.GetGeolocation ]
+                       [ text "Get current geolocation" ]
+              , p []
+                  [text "Please use secure connection (https) to obtain your coordinates, otherwise it might not work"]
+              ]
         , div []
               [ button [ onClick Message.FetchAstroData ]
                        [ text "Query" ]

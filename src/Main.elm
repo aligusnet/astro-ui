@@ -3,6 +3,7 @@ module Main exposing (..)
 import Html
 
 import AWS.Lambda
+import Geolocation
 import Command
 import Model
 import Message
@@ -18,6 +19,8 @@ subscriptions : Model.Model -> Sub Message.Message
 subscriptions model = Sub.batch
   [ AWS.Lambda.fetchAstroDataSuccess Message.FetchAstroDataSuccess
   , AWS.Lambda.fetchAstroDataError Message.FetchAstroDataError
+  , Geolocation.getPositionSuccess Message.GetGeolocationSuccess
+  , Geolocation.getPositionError Message.GetGeolocationError
   ]
 
 
