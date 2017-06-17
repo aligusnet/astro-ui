@@ -18,8 +18,8 @@ Properties
 	flex-grow: 0;
 	flex-wrap: wrap;
 	width: 100%;
-	padding-left: 15px;
-	padding-right: 15px;
+	padding-left: 10px;
+	padding-right: 10px;
   padding-top: 5px;
 }
 .property-caption {
@@ -35,19 +35,19 @@ Properties
   	font-weight: bold;
 }
 .property-value {
-	width: 200px;
+	width: 170px;
 }
 /*************************
 Global
 *************************/
-input {
-	width: 90%;
-}
 .wrapper {
 	margin: auto 40px;
 }
 .control-block {
 	max-width: 500px;
+}
+.control-block input {
+	width: 80%;
 }
 #datetime-control {
 	margin-bottom: 5px;
