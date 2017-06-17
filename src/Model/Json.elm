@@ -47,6 +47,9 @@ astroDataDecoder = decode Model.AstroData
   |> required "saturn" planetaiDecoder
   |> required "uranus" planetaiDecoder
   |> required "neptune" planetaiDecoder
+  |> required "polaris" starDecoder
+  |> required "alphaCrucis" starDecoder
+  |> required "sirius" starDecoder
 
 
 planetaiDecoder : Decode.Decoder (Model.Planetai)
@@ -56,6 +59,11 @@ planetaiDecoder = decode Model.Planetai
   |> required "angularSize" Decode.float
   |> required "position" horizontalCoordinatesDecoder
 
+
+starDecoder : Decode.Decoder (Model.Star)
+starDecoder = decode Model.Star
+  |> required "starRiseSet" setRiseDecode
+  |> required "starPosition" horizontalCoordinatesDecoder
 
 setRiseDecode : Decode.Decoder (Model.SetRise)
 setRiseDecode = decode Model.SetRise

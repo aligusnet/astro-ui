@@ -17,6 +17,11 @@ type alias Planetai =
   }
 
 
+type alias Star =
+  { riseSet: SetRise
+  , position: HorizonCoordinates
+  }
+
 type alias Distance =
   { value: Float
   , units: String
@@ -47,6 +52,9 @@ type alias AstroData =
   , saturn: Planetai
   , uranus: Planetai
   , neptune: Planetai
+  , polaris: Star
+  , alphaCrucis: Star
+  , sirius: Star
   }
 
 

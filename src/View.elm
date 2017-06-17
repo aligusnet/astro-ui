@@ -1,6 +1,6 @@
 module View exposing (view)
 
-import Html exposing (Html, div, text, program, button, input, h1, h2)
+import Html exposing (Html, div, text, program, button, input, h1, h2, h3)
 import Html.Events exposing (onClick, onInput)
 import Html.Attributes as Attr
 import RemoteData
@@ -69,15 +69,20 @@ viewRemoteAstroData rad = case rad of
 viewAstroData : Model.AstroData -> Html Message.Message
 viewAstroData astro =
   div []
-      [ h2 [] [ text "Sun" ], viewPlanetai astro.sun
-      , h2 [] [ text "Moon" ], viewPlanetai astro.moon
-      , h2 [] [ text "Mercury" ], viewPlanetai astro.mercury
-      , h2 [] [ text "Venus" ], viewPlanetai astro.venus
-      , h2 [] [ text "Mars" ], viewPlanetai astro.mars
-      , h2 [] [ text "Jupiter" ], viewPlanetai astro.jupiter
-      , h2 [] [ text "Saturn" ], viewPlanetai astro.saturn
-      , h2 [] [ text "Uranus" ], viewPlanetai astro.uranus
-      , h2 [] [ text "Neptune" ], viewPlanetai astro.neptune
+      [ h3 [] [ text "Sun" ], viewPlanetai astro.sun
+      , h3 [] [ text "Moon" ], viewPlanetai astro.moon
+      , h2 [] [ text "Planets" ]
+      , h3 [] [ text "Mercury" ], viewPlanetai astro.mercury
+      , h3 [] [ text "Venus" ], viewPlanetai astro.venus
+      , h3 [] [ text "Mars" ], viewPlanetai astro.mars
+      , h3 [] [ text "Jupiter" ], viewPlanetai astro.jupiter
+      , h3 [] [ text "Saturn" ], viewPlanetai astro.saturn
+      , h3 [] [ text "Uranus" ], viewPlanetai astro.uranus
+      , h3 [] [ text "Neptune" ], viewPlanetai astro.neptune
+      , h2 [] [ text "Stars" ]
+      , h3 [] [ text "Polaris" ], viewStar astro.polaris
+      , h3 [] [ text "Alpha Crucis" ], viewStar astro.alphaCrucis
+      , h3 [] [ text "Sirius" ], viewStar astro.sirius
       ]
 
 
@@ -88,6 +93,14 @@ viewPlanetai planetai =
       , viewDistance planetai.distance
       , viewAngularSize planetai.angularSize
       , viewHorizontalCoordinates planetai.position
+      ]
+
+
+viewStar : Model.Star -> Html Message.Message
+viewStar star =
+  div []
+      [ viewSetRise star.riseSet
+      , viewHorizontalCoordinates star.position
       ]
 
 
