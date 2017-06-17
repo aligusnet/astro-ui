@@ -1,0 +1,103 @@
+/*************************
+Astro Container
+*************************/
+.astro-list {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+}
+.astro-list-name {
+	text-align: center;
+}
+/*************************
+Properties
+*************************/
+.property-row {
+	display: flex;
+	flex-direction: row;
+	flex-grow: 0;
+	flex-wrap: wrap;
+	width: 100%;
+	padding-left: 15px;
+	padding-right: 15px;
+  padding-top: 5px;
+}
+.property-caption {
+	text-align: center;
+}
+.property-name {
+	flex-grow: 1;
+	width: 90px;
+  	overflow: hidden: ;
+  	white-space: nowrap;
+  	text-overflow: ellipsis;
+  	padding-right: 10px;
+  	font-weight: bold;
+}
+.property-value {
+	width: 200px;
+}
+/*************************
+Global
+*************************/
+input {
+	width: 90%;
+}
+.wrapper {
+	margin: auto 40px;
+}
+.control-block {
+	max-width: 500px;
+}
+#datetime-control {
+	margin-bottom: 5px;
+}
+#geo-location {
+	flex-direction: column;
+	display: flex;
+  justify-content: center;
+	align-items: center;
+	margin: 15px;
+}
+#geo-location button {
+	letter-spacing: 1.5px;
+	padding: 5px 10px;
+}
+#query-data {
+	display: flex;
+  justify-content: center;
+}
+#query-data button {
+	width: 300px;
+	font-size: 100%;
+	font-weight: normal;
+	letter-spacing: 1.5px;
+	padding: 5px 0;
+	margin: 10px auto;
+	color: #333;
+}
+
+/*************************
+Media Queries
+*************************/
+@media screen and (max-width: 800px) {
+	.astro-list1 {
+		flex-direction: column;
+	}
+	.wrapper {
+		margin: auto;
+	}
+}
+
+@media print {
+  .control-block {
+		display: none;
+	}
+	.wrapper {
+		margin: auto;
+	}
+
+	.astro-list-name {
+		margin-top: 20px;
+	}
+}

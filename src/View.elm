@@ -1,6 +1,6 @@
 module View exposing (view)
 
-import Html exposing (Html, div, text, program, button, input, h1, h2, h3, p)
+import Html exposing (Html, div, text, program, button, input, h1, h2, h3, p, section)
 import Html.Events exposing (onClick, onInput)
 import Html.Attributes as Attr
 import RemoteData
@@ -21,47 +21,81 @@ import Message
 
 view : Model.Model -> Html Message.Message
 view model =
-    div []
+    div [ Attr.class "wrapper" ]
         [ h1 [] [ text "Astro" ]
-        , div []
-              [ button [ onClick Message.RequestCurrentDate ]
-                       [ text "Now" ]
-              ]
-        , div []
-              [ viewDateTimePicker model ]
-        , div []
-              [ text "latitude:"
-              , input [ Attr.type_ "number"
-                      , Attr.max "90.0"
-                      , Attr.min "-90.0"
-                      , Attr.value (toString model.latitude)
-                      , onInput Message.LatitudeChange
-                      ]
-                      [ text (toString model.latitude) ]
-              ]
-        , div []
-              [ text "longitude:"
-              , input [ Attr.type_ "number"
-                      , Attr.max "180.0"
-                      , Attr.min "-180.0"
-                      , Attr.value (toString model.longitude)
-                      , onInput Message.LongitudeChange
-                      ]
-                      [ text (toString model.latitude) ]
-              ]
-        , div []
-              [ button [ onClick Message.GetGeolocation ]
-                       [ text "Get current geolocation" ]
-              , p []
-                  [text "Please use secure connection (https) to obtain your coordinates, otherwise it might not work"]
-              ]
-        , div []
-              [ button [ onClick Message.FetchAstroData ]
-                       [ text "Query" ]
-              ]
+        , viewControlBlock model
+
         , div []
               [ viewRemoteAstroData model.astro ]
         ]
+
+viewControlBlock : Model.Model -> Html Message.Message
+viewControlBlock model =
+  div [ Attr.class "control-block" ]
+      [ viewDateTimeControl model
+      , viewLatitudeControl model
+      , viewLongitudeControl model
+      , viewGeoLocationControl
+      , div [ Attr.id "query-data" ]
+            [ button [ onClick Message.FetchAstroData ]
+                     [ text "Query" ]
+            ]
+      ]
+
+
+viewDateTimeControl : Model.Model -> Html Message.Message
+viewDateTimeControl model =
+  div [ Attr.class "property-row", Attr.id "datetime-control" ]
+      [ div [ Attr.class "property-name"]
+            [ text "Date & Time" ]
+      , div [ Attr.class "property-value"]
+            [ viewDateTimePicker model ]
+      ]
+
+viewLatitudeControl : Model.Model -> Html Message.Message
+viewLatitudeControl model =
+  div [ Attr.class "property-row" ]
+      [ div [ Attr.class "property-name"]
+            [ text "Latitude" ]
+      , div [ Attr.class "property-value"]
+            [ input [ Attr.type_ "number"
+                    , Attr.max "90.0"
+                    , Attr.min "-90.0"
+                    , Attr.value (toString model.latitude)
+                    , onInput Message.LatitudeChange
+                    ]
+                    [ text (toString model.latitude) ]
+            ]
+      ]
+
+
+viewLongitudeControl : Model.Model -> Html Message.Message
+viewLongitudeControl model =
+  div [ Attr.class "property-row" ]
+      [ div [ Attr.class "property-name" ]
+            [ text "Longitude" ]
+      , div [ Attr.class "property-value" ]
+            [ input [ Attr.type_ "number"
+                    , Attr.max "180.0"
+                    , Attr.min "-180.0"
+                    , Attr.value (toString model.longitude)
+                    , onInput Message.LongitudeChange
+                    ]
+                    [ text (toString model.longitude) ]
+            ]
+      ]
+
+
+viewGeoLocationControl : Html Message.Message
+viewGeoLocationControl =
+  div [ Attr.id "geo-location" ]
+      [ div [ ]
+            [ button [ onClick Message.GetGeolocation ]
+                     [ text "Get current geolocation" ]
+            ]
+      , div [ ]
+            [text "Please use secure connection (https) to obtain your coordinates, otherwise it might not work"]
+      ]
 
 
 viewRemoteAstroData : Model.RemoteAstroData -> Html Message.Message
@@ -75,94 +109,55 @@ viewRemoteAstroData rad = case rad of
 viewAstroData : Model.AstroData -> Html Message.Message
 viewAstroData astro =
   div []
-      [ h3 [] [ text "Sun" ], viewPlanetai astro.sun
-      , h3 [] [ text "Moon" ], viewPlanetai astro.moon
-      , h2 [] [ text "Planets" ]
-      , h3 [] [ text "Mercury" ], viewPlanetai astro.mercury
-      , h3 [] [ text "Venus" ], viewPlanetai astro.venus
-      , h3 [] [ text "Mars" ], viewPlanetai astro.mars
-      , h3 [] [ text "Jupiter" ], viewPlanetai astro.jupiter
-      , h3 [] [ text "Saturn" ], viewPlanetai astro.saturn
-      , h3 [] [ text "Uranus" ], viewPlanetai astro.uranus
-      , h3 [] [ text "Neptune" ], viewPlanetai astro.neptune
-      , h2 [] [ text "Stars" ]
-      , h3 [] [ text "Polaris" ], viewStar astro.polaris
-      , h3 [] [ text "Alpha Crucis" ], viewStar astro.alphaCrucis
-      , h3 [] [ text "Sirius" ], viewStar astro.sirius
-      , h3 [] [ text "Betelgeuse" ], viewStar astro.betelgeuse
-      , h3 [] [ text "Rigel" ], viewStar astro.rigel
-      , h3 [] [ text "Vega" ], viewStar astro.vega
-      , h3 [] [ text "Antares" ], viewStar astro.antares
-      , h3 [] [ text "Canopus" ], viewStar astro.canopus
-      , h3 [] [ text "Pleiades" ], viewStar astro.pleiades
+      [ viewSunMoon astro
+      , viewPlanets astro
+      , viewStars astro
       ]
 
 
-viewPlanetai : Model.Planetai -> Html Message.Message
-viewPlanetai planetai =
+viewSunMoon : Model.AstroData -> Html Message.Message
+viewSunMoon astro =
   div []
-      [ viewSetRise planetai.riseSet
-      , viewDistance planetai.distance
-      , viewAngularSize planetai.angularSize
-      , viewHorizontalCoordinates planetai.position
-      ]
+          [ div [ Attr.class "astro-list wrapper" ]
+                [ viewPlanetai "Sun" astro.sun
+                , viewPlanetai "Moon" astro.moon
+                ]
+          ]
 
-
-viewStar : Model.Star -> Html Message.Message
-viewStar star =
+viewPlanets : Model.AstroData -> Html Message.Message
+viewPlanets astro =
   div []
-      [ viewSetRise star.riseSet
-      , viewHorizontalCoordinates star.position
-      ]
+          [ div [ Attr.class "astro-list-name" ]
+                [ h2 [] [ text "Planets" ] ]
+          , div [ Attr.class "astro-list wrapper" ]
+                [ viewPlanetai "Mercury" astro.mercury
+                , viewPlanetai "Venus" astro.venus
+                , viewPlanetai "Mars" astro.mars
+                , viewPlanetai "Jupiter" astro.jupiter
+                , viewPlanetai "Saturn" astro.saturn
+                , viewPlanetai "Uranus" astro.uranus
+                , viewPlanetai "Neptune" astro.neptune
+                ]
+          ]
 
-
-viewSetRise : Model.SetRise -> Html Message.Message
-viewSetRise setRise =
+viewStars : Model.AstroData -> Html Message.Message
+viewStars astro =
   div []
-      [ div []
-            [ text "Rise: "
-            , text (formatMaybeDateTime setRise.rise) ]
-      , div []
-            [ text "Rise Azimuth: "
-            , text (formatMaybeDecimalDegrees setRise.riseAzimuth "--") ]
-      , div []
-            [ text "Set: "
-            , text (formatMaybeDateTime setRise.set) ]
-      , div []
-            [ text "Set Azimuth: "
-            , text (formatMaybeDecimalDegrees setRise.setAzimuth "--") ]
-      , div []
-            [ text "State: "
-            , text setRise.state ]
-      ]
+          [ div [ Attr.class "astro-list-name" ]
+                [ h2 [] [ text "Stars" ] ]
+          , div [ Attr.class "astro-list wrapper" ]
+                [ viewStar "Polaris" astro.polaris
+                , viewStar "Alpha Crucis" astro.alphaCrucis
+                , viewStar "Sirius" astro.sirius
+                , viewStar "Betelgeuse" astro.betelgeuse
+                , viewStar "Rigel" astro.rigel
+                , viewStar "Vega" astro.vega
+                , viewStar "Antares" astro.antares
+                , viewStar "Canopus" astro.canopus
+                , viewStar "Pleiades" astro.pleiades
+                ]
+          ]
 
-
-viewDistance : Model.Distance -> Html Message.Message
-viewDistance distance =
-  div []
-      [ text "Distance: "
-      , text (formatNumber distance.value distance.units)
-      ]
-
-
-viewAngularSize : Float -> Html Message.Message
-viewAngularSize = viewDecimalDegrees "Angular Size"
-
-
-viewHorizontalCoordinates : Model.HorizonCoordinates -> Html Message.Message
-viewHorizontalCoordinates hc =
-  div []
-      [ viewDecimalDegrees "Altitude" hc.altitude
-      , viewDecimalDegrees "Azimuth" hc.azimuth
-      ]
-
-
-viewDecimalDegrees : String -> Float -> Html Message.Message
-viewDecimalDegrees name dd =
-  div []
-      [ text (name ++ ": ")
-      , text (formatDecimalDegrees dd)
-      ]
 
 formatMaybeDateTime : Maybe Date.Date -> String
 formatMaybeDateTime mbDT =
@@ -227,3 +222,84 @@ customInputFormat =
     { inputFormatter = DateFormatter.format config customDatePattern
     , inputParser = DateParser.parse config customDatePattern >> Result.toMaybe
     }
+
+
+type alias Property =
+  { name : String
+  , value : String
+  }
+
+
+viewPlanetai : String -> Model.Planetai -> Html Message.Message
+viewPlanetai caption planetai =
+  let props = appendPlanetaiProperties planetai []
+      formattedProps = List.map formatProperty props
+      formattedCaption = formatPropertyListCaption caption
+  in  div [ Attr.class "astro-item" ]
+          (formattedCaption :: formattedProps)
+
+
+viewStar : String -> Model.Star -> Html Message.Message
+viewStar caption star  =
+  let props = appendStarProperties star []
+      formattedProps = List.map formatProperty props
+      formattedCaption = formatPropertyListCaption caption
+  in  div [ Attr.class "astro-item" ]
+          (formattedCaption :: formattedProps)
+
+
+formatPropertyListCaption : String -> Html Message.Message
+formatPropertyListCaption caption =
+  div [ Attr.class "property-caption" ]
+      [ h3 [] [ text caption ] ]
+
+formatProperty : Property -> Html Message.Message
+formatProperty prop =
+  div [ Attr.class "property-row" ]
+      [ div [ Attr.class "property-name"]
+            [ text prop.name ]
+      , div [ Attr.class "property-value"]
+            [ text prop.value ]
+      ]
+
+appendPlanetaiProperties : Model.Planetai -> List Property -> List Property
+appendPlanetaiProperties planetai props = props
+  |> appendHorizonCoordinatesProperties planetai.position
+  |> appendAngularSizeProperties planetai.angularSize
+  |> appendDistanceProperties planetai.distance
+  |> appendRiseSetProperties planetai.riseSet
+
+
+appendStarProperties : Model.Star -> List Property -> List Property
+appendStarProperties star props = props
+  |> appendHorizonCoordinatesProperties star.position
+  |> appendRiseSetProperties star.riseSet
+
+
+appendRiseSetProperties : Model.SetRise -> List Property -> List Property
+appendRiseSetProperties setRise props =
+  Property "Rise" (formatMaybeDateTime setRise.rise)
+  :: Property "Rise Azimuth" (formatMaybeDecimalDegrees setRise.riseAzimuth "--")
+  :: Property "Set" (formatMaybeDateTime setRise.set)
+  :: Property "Set Azimuth" (formatMaybeDecimalDegrees setRise.setAzimuth "--")
+  :: Property "State" setRise.state
+  :: props
+
+
+appendDistanceProperties : Model.Distance -> List Property -> List Property
+appendDistanceProperties distance props =
+  Property "Distance" (formatNumber distance.value distance.units)
+  :: props
+
+
+appendAngularSizeProperties : Float -> List Property -> List Property
+appendAngularSizeProperties size props =
+  Property "Angular Size" (formatDecimalDegrees size)
+  :: props
+
+
+appendHorizonCoordinatesProperties : Model.HorizonCoordinates -> List Property -> List Property
+appendHorizonCoordinatesProperties hc props =
+  Property "Altitude" (formatDecimalDegrees hc.altitude)
+  :: Property "Azimuth" (formatDecimalDegrees hc.azimuth)
+  :: props
