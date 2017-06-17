@@ -9,6 +9,25 @@ type Error = BadStatus String
             | BadPayload String
 
 
+type alias Planetai =
+  { riseSet: SetRise
+  , distance: Distance
+  , angularSize: Float
+  , position: HorizonCoordinates
+  }
+
+
+type alias Distance =
+  { value: Float
+  , units: String
+  }
+
+
+type alias HorizonCoordinates =
+  { altitude: Float
+  , azimuth: Float
+  }
+
 type alias SetRise =
   { rise: Maybe Date.Date
   , set: Maybe Date.Date
@@ -17,15 +36,15 @@ type alias SetRise =
 
 
 type alias AstroData =
-  { sun: SetRise
-  , moon: SetRise
-  , mercury: SetRise
-  , venus: SetRise
-  , mars: SetRise
-  , jupiter: SetRise
-  , saturn: SetRise
-  , uranus: SetRise
-  , neptune: SetRise
+  { sun: Planetai
+  , moon: Planetai
+  , mercury: Planetai
+  , venus: Planetai
+  , mars: Planetai
+  , jupiter: Planetai
+  , saturn: Planetai
+  , uranus: Planetai
+  , neptune: Planetai
   }
 
 

@@ -13,7 +13,8 @@ import DateTimePicker.Config exposing (Config, DatePickerConfig
 import Date.Extra.Format as DateFormatter
 import Date.Extra.Config.Config_en_gb exposing (config)
 import DateParser
-
+import FormatNumber
+import FormatNumber.Locales as NumberLocales
 
 import Model
 import Message
@@ -68,15 +69,25 @@ viewRemoteAstroData rad = case rad of
 viewAstroData : Model.AstroData -> Html Message.Message
 viewAstroData astro =
   div []
-      [ h2 [] [ text "Sun" ], viewSetRise astro.sun
-      , h2 [] [ text "Moon" ], viewSetRise astro.moon
-      , h2 [] [ text "Mercury" ], viewSetRise astro.mercury
-      , h2 [] [ text "Venus" ], viewSetRise astro.venus
-      , h2 [] [ text "Mars" ], viewSetRise astro.mars
-      , h2 [] [ text "Jupiter" ], viewSetRise astro.jupiter
-      , h2 [] [ text "Saturn" ], viewSetRise astro.saturn
-      , h2 [] [ text "Uranus" ], viewSetRise astro.uranus
-      , h2 [] [ text "Neptune" ], viewSetRise astro.neptune
+      [ h2 [] [ text "Sun" ], viewPlanetai astro.sun
+      , h2 [] [ text "Moon" ], viewPlanetai astro.moon
+      , h2 [] [ text "Mercury" ], viewPlanetai astro.mercury
+      , h2 [] [ text "Venus" ], viewPlanetai astro.venus
+      , h2 [] [ text "Mars" ], viewPlanetai astro.mars
+      , h2 [] [ text "Jupiter" ], viewPlanetai astro.jupiter
+      , h2 [] [ text "Saturn" ], viewPlanetai astro.saturn
+      , h2 [] [ text "Uranus" ], viewPlanetai astro.uranus
+      , h2 [] [ text "Neptune" ], viewPlanetai astro.neptune
+      ]
+
+
+viewPlanetai : Model.Planetai -> Html Message.Message
+viewPlanetai planetai =
+  div []
+      [ viewSetRise planetai.riseSet
+      , viewDistance planetai.distance
+      , viewAngularSize planetai.angularSize
+      , viewHorizontalCoordinates planetai.position
       ]
 
 
@@ -94,6 +105,33 @@ viewSetRise setRise =
             , text setRise.state ]
       ]
 
+
+viewDistance : Model.Distance -> Html Message.Message
+viewDistance distance =
+  div []
+      [ text "Distance: "
+      , text (formatNumber distance.value distance.units)
+      ]
+
+
+viewAngularSize : Float -> Html Message.Message
+viewAngularSize = viewDecimalDegrees "Angular Size"
+
+
+viewHorizontalCoordinates : Model.HorizonCoordinates -> Html Message.Message
+viewHorizontalCoordinates hc =
+  div []
+      [ viewDecimalDegrees "Altitude" hc.altitude
+      , viewDecimalDegrees "Azimuth" hc.azimuth
+      ]
+
+
+viewDecimalDegrees : String -> Float -> Html Message.Message
+viewDecimalDegrees name dd =
+  div []
+      [ text (name ++ ": ")
+      , text (formatDecimalDegrees dd)
+      ]
 
 formatMaybeDateTime : Maybe Date.Date -> String
 formatMaybeDateTime mbDT =
@@ -126,6 +164,24 @@ dateTimePickerConfig =
 
 customDatePattern : String
 customDatePattern = "%d/%m/%Y %H:%M"
+
+
+formatNumber : Float -> String -> String
+formatNumber n units =
+  let str = FormatNumber.format NumberLocales.usLocale n
+  in str ++ units
+
+
+
+formatDecimalDegrees : Float -> String
+formatDecimalDegrees df =
+  let di = floor df
+      mf = 60 * (df - toFloat di)
+      mi = floor mf
+      sf = 60 * (mf - toFloat mi)
+  in (toString di) ++ "°"
+      ++ (toString mi) ++ "′"
+      ++ (formatNumber sf "″")
 
 
 customInputFormat : DateTimePicker.Config.InputFormat

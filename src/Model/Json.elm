@@ -38,15 +38,23 @@ decodeAstroData str = Decode.decodeString astroDataDecoder str
 
 astroDataDecoder : Decode.Decoder (Model.AstroData)
 astroDataDecoder = decode Model.AstroData
-  |> required "sun" setRiseDecode
-  |> required "moon" setRiseDecode
-  |> required "mercury" setRiseDecode
-  |> required "venus" setRiseDecode
-  |> required "mars" setRiseDecode
-  |> required "jupiter" setRiseDecode
-  |> required "saturn" setRiseDecode
-  |> required "uranus" setRiseDecode
-  |> required "neptune" setRiseDecode
+  |> required "sun" planetaiDecoder
+  |> required "moon" planetaiDecoder
+  |> required "mercury" planetaiDecoder
+  |> required "venus" planetaiDecoder
+  |> required "mars" planetaiDecoder
+  |> required "jupiter" planetaiDecoder
+  |> required "saturn" planetaiDecoder
+  |> required "uranus" planetaiDecoder
+  |> required "neptune" planetaiDecoder
+
+
+planetaiDecoder : Decode.Decoder (Model.Planetai)
+planetaiDecoder = decode Model.Planetai
+  |> required "riseSet" setRiseDecode
+  |> required "distance" distanceDecoder
+  |> required "angularSize" Decode.float
+  |> required "position" horizontalCoordinatesDecoder
 
 
 setRiseDecode : Decode.Decoder (Model.SetRise)
@@ -54,3 +62,14 @@ setRiseDecode = decode Model.SetRise
   |> optional "rise" (Decode.nullable DecodeExtra.date) Nothing
   |> optional "set" (Decode.nullable DecodeExtra.date) Nothing
   |> required "state" Decode.string
+
+
+distanceDecoder : Decode.Decoder (Model.Distance)
+distanceDecoder = decode Model.Distance
+  |> required "value" Decode.float
+  |> required "units" Decode.string
+
+horizontalCoordinatesDecoder : Decode.Decoder (Model.HorizonCoordinates)
+horizontalCoordinatesDecoder = decode Model.HorizonCoordinates
+  |> required "altitude" Decode.float
+  |> required "azimuth" Decode.float
