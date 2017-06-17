@@ -30,7 +30,9 @@ type alias HorizonCoordinates =
 
 type alias SetRise =
   { rise: Maybe Date.Date
+  , riseAzimuth: Maybe Float
   , set: Maybe Date.Date
+  , setAzimuth: Maybe Float
   , state: String
   }
 

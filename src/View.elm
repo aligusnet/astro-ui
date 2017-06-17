@@ -98,8 +98,14 @@ viewSetRise setRise =
             [ text "Rise: "
             , text (formatMaybeDateTime setRise.rise) ]
       , div []
+            [ text "Rise Azimuth: "
+            , text (formatMaybeDecimalDegrees setRise.riseAzimuth "--") ]
+      , div []
             [ text "Set: "
             , text (formatMaybeDateTime setRise.set) ]
+      , div []
+            [ text "Set Azimuth: "
+            , text (formatMaybeDecimalDegrees setRise.setAzimuth "--") ]
       , div []
             [ text "State: "
             , text setRise.state ]
@@ -182,6 +188,13 @@ formatDecimalDegrees df =
   in (toString di) ++ "°"
       ++ (toString mi) ++ "′"
       ++ (formatNumber sf "″")
+
+
+formatMaybeDecimalDegrees : Maybe Float -> String -> String
+formatMaybeDecimalDegrees mbdd default =
+  case mbdd of
+    Just dd -> formatDecimalDegrees dd
+    Nothing -> default
 
 
 customInputFormat : DateTimePicker.Config.InputFormat

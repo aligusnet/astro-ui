@@ -60,7 +60,9 @@ planetaiDecoder = decode Model.Planetai
 setRiseDecode : Decode.Decoder (Model.SetRise)
 setRiseDecode = decode Model.SetRise
   |> optional "rise" (Decode.nullable DecodeExtra.date) Nothing
+  |> optional "riseAzimuth" (Decode.nullable Decode.float) Nothing
   |> optional "set" (Decode.nullable DecodeExtra.date) Nothing
+  |> optional "setAzimuth" (Decode.nullable Decode.float) Nothing
   |> required "state" Decode.string
 
 
