@@ -33,6 +33,7 @@ viewControlBlock : Model.Model -> Html Message.Message
 viewControlBlock model =
   div [ Attr.class "control-block" ]
       [ viewDateTimeControl model
+      , viewCurrentTimeControl
       , viewLatitudeControl model
       , viewLongitudeControl model
       , viewGeoLocationControl
@@ -51,6 +52,17 @@ viewDateTimeControl model =
       , div [ Attr.class "property-value"]
             [ viewDateTimePicker model ]
       ]
+
+
+viewCurrentTimeControl : Html Message.Message
+viewCurrentTimeControl =
+  div [ Attr.class "control-block-button" ]
+      [ div [ ]
+            [ button [ onClick Message.RequestCurrentDate ]
+                     [ text "Get current time" ]
+            ]
+      ]
+
 
 viewLatitudeControl : Model.Model -> Html Message.Message
 viewLatitudeControl model =
@@ -88,7 +100,7 @@ viewLongitudeControl model =
 
 viewGeoLocationControl : Html Message.Message
 viewGeoLocationControl =
-  div [ Attr.id "geo-location" ]
+  div [ Attr.class "control-block-button" ]
       [ div [ ]
             [ button [ onClick Message.GetGeolocation ]
                      [ text "Get current geolocation" ]
