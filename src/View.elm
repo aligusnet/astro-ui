@@ -1,6 +1,6 @@
 module View exposing (view)
 
-import Html exposing (Html, div, text, program, button, input, h1, h2)
+import Html exposing (Html, div, text, program, button, input, h1, h2, p)
 import Html.Events exposing (onClick, onInput)
 import Html.Attributes as Attr
 import RemoteData
@@ -121,8 +121,9 @@ viewAstroData astro =
 viewSunMoon : Model.AstroData -> Html Message.Message
 viewSunMoon astro =
   div []
-          [ div [ Attr.class "astro-list wrapper" ]
-                [ viewPlanetai "Sun" astro.sun
+          [ div [ Attr.class "astro-list" ]
+                [ viewRequest astro.request
+                , viewPlanetai "Sun" astro.sun
                 , viewPlanetai "Moon" astro.moon
                 ]
           ]
@@ -132,7 +133,7 @@ viewPlanets astro =
   div []
           [ div [ Attr.class "astro-list-name" ]
                 [ h2 [] [ text "Planets" ] ]
-          , div [ Attr.class "astro-list wrapper" ]
+          , div [ Attr.class "astro-list" ]
                 [ viewPlanetai "Mercury" astro.mercury
                 , viewPlanetai "Venus" astro.venus
                 , viewPlanetai "Mars" astro.mars
@@ -149,7 +150,7 @@ viewStars astro =
   div []
           [ div [ Attr.class "astro-list-name" ]
                 [ h2 [] [ text "Stars" ] ]
-          , div [ Attr.class "astro-list wrapper" ]
+          , div [ Attr.class "astro-list" ]
                 [ viewStar "Polaris" astro.polaris
                 , viewStar "Alpha Crucis" astro.alphaCrucis
                 , viewStar "Sirius" astro.sirius
@@ -179,3 +180,12 @@ viewStar caption star  =
       formattedCaption = Properties.formatCaption caption
   in  div [ Attr.class "astro-item" ]
           (formattedCaption :: formattedProps)
+
+
+viewRequest : Model.Request -> Html Message.Message
+viewRequest request =
+  let props = Properties.appendRequest request []
+      formattedProps = Properties.format props
+      formattedCaption = Properties.formatCaption "Query Parameters"
+  in div [ Attr.class "astro-item" ]
+         (formattedCaption::formattedProps)

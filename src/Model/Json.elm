@@ -38,6 +38,7 @@ decodeAstroData str = Decode.decodeString astroDataDecoder str
 
 astroDataDecoder : Decode.Decoder (Model.AstroData)
 astroDataDecoder = decode Model.AstroData
+  |> required "request" requestDecoder
   |> required "sun" planetaiDecoder
   |> required "moon" planetaiDecoder
   |> required "mercury" planetaiDecoder
@@ -71,6 +72,7 @@ starDecoder = decode Model.Star
   |> required "starRiseSet" setRiseDecode
   |> required "starPosition" horizontalCoordinatesDecoder
 
+
 setRiseDecode : Decode.Decoder (Model.SetRise)
 setRiseDecode = decode Model.SetRise
   |> optional "rise" (Decode.nullable DecodeExtra.date) Nothing
@@ -85,7 +87,20 @@ distanceDecoder = decode Model.Distance
   |> required "value" Decode.float
   |> required "units" Decode.string
 
+
 horizontalCoordinatesDecoder : Decode.Decoder (Model.HorizonCoordinates)
 horizontalCoordinatesDecoder = decode Model.HorizonCoordinates
   |> required "altitude" Decode.float
   |> required "azimuth" Decode.float
+
+
+requestDecoder : Decode.Decoder (Model.Request)
+requestDecoder = decode Model.Request
+  |> required "coordinates" geoCoordinatesDecoder
+  |> required "datetime" DecodeExtra.date
+
+
+geoCoordinatesDecoder : Decode.Decoder (Model.GeoCoordinates)
+geoCoordinatesDecoder = decode Model.GeoCoordinates
+  |> required "latitude" Decode.float
+  |> required "longitude" Decode.float

@@ -41,9 +41,19 @@ type alias SetRise =
   , state: String
   }
 
+type alias GeoCoordinates =
+  { latitude: Float
+  , longitude: Float
+  }
+
+type alias Request =
+  { coordinates: GeoCoordinates
+  , datetime: Date.Date
+  }
 
 type alias AstroData =
-  { sun: Planetai
+  { request: Request
+  , sun: Planetai
   , moon: Planetai
   , mercury: Planetai
   , venus: Planetai

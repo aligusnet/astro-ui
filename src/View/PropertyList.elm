@@ -1,5 +1,6 @@
 module View.PropertyList exposing (format, formatCaption
-                                  , appendPlanetai, appendStar)
+                                  , appendPlanetai, appendStar
+                                  , appendRequest)
 
 
 import Html exposing (Html, div, h2, h3, text)
@@ -14,6 +15,9 @@ type alias Property =
   , value : String
   }
 
+
+defaultValue : String
+defaultValue = "--"
 
 format : List Property -> List (Html msg)
 format props = List.map formatProperty props
@@ -50,10 +54,10 @@ appendStar star props = props
 
 appendRiseSet : Model.SetRise -> List Property -> List Property
 appendRiseSet setRise props =
-  Property "Rise" (Format.maybeDateTime setRise.rise)
-  :: Property "Rise Azimuth" (Format.maybeDecimalDegrees setRise.riseAzimuth "--")
-  :: Property "Set" (Format.maybeDateTime setRise.set)
-  :: Property "Set Azimuth" (Format.maybeDecimalDegrees setRise.setAzimuth "--")
+  Property "Rise" (Format.maybeDateTime setRise.rise defaultValue)
+  :: Property "Rise Azimuth" (Format.maybeDecimalDegrees setRise.riseAzimuth defaultValue)
+  :: Property "Set" (Format.maybeDateTime setRise.set defaultValue)
+  :: Property "Set Azimuth" (Format.maybeDecimalDegrees setRise.setAzimuth defaultValue)
   :: Property "State" setRise.state
   :: props
 
@@ -74,4 +78,17 @@ appendHorizonCoordinates : Model.HorizonCoordinates -> List Property -> List Pro
 appendHorizonCoordinates hc props =
   Property "Altitude" (Format.decimalDegrees hc.altitude)
   :: Property "Azimuth" (Format.decimalDegrees hc.azimuth)
+  :: props
+
+
+appendRequest : Model.Request -> List Property -> List Property
+appendRequest request props = props
+  |> appendGeoCoordinates request.coordinates
+  |> (::) (Property "Datetime" (Format.dateTime request.datetime))
+
+
+appendGeoCoordinates : Model.GeoCoordinates -> List Property -> List Property
+appendGeoCoordinates coords props =
+  Property "Latitude" (Format.decimalDegrees coords.latitude)
+  :: Property "Longitude" (Format.decimalDegrees coords.longitude)
   :: props

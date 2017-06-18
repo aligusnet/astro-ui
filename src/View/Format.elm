@@ -16,6 +16,15 @@ number n units =
 
 decimalDegrees : Float -> String
 decimalDegrees df =
+  let isNegative = df < 0
+      strDf = nonNegativeDecimalDegrees (abs df)
+  in if isNegative
+     then "-" ++ strDf
+     else strDf
+
+
+nonNegativeDecimalDegrees : Float -> String
+nonNegativeDecimalDegrees df =
   let di = floor df
       mf = 60 * (df - toFloat di)
       mi = floor mf
@@ -32,8 +41,11 @@ maybeDecimalDegrees mbdd default =
     Nothing -> default
 
 
-maybeDateTime : Maybe Date.Date -> String
-maybeDateTime mbDT =
+dateTime : Date.Date -> String
+dateTime dt = DateFormatter.format config "%d/%m/%Y %H:%M %z" dt
+
+maybeDateTime : Maybe Date.Date -> String -> String
+maybeDateTime mbDT default =
   case mbDT of
-    Just dt -> DateFormatter.format config "%d/%m/%Y %H:%M %z" dt
-    Nothing -> "--"
+    Just dt -> dateTime dt
+    Nothing -> default
