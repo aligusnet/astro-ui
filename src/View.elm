@@ -1,23 +1,15 @@
 module View exposing (view)
 
-import Html exposing (Html, div, text, program, button, input, h1, h2, h3, p, section)
+import Html exposing (Html, div, text, program, button, input, h1, h2)
 import Html.Events exposing (onClick, onInput)
 import Html.Attributes as Attr
 import RemoteData
-import Date
-import DateTimePicker
-import DateTimePicker.Config exposing (Config, DatePickerConfig
-                                      , TimePickerConfig
-                                      , defaultDateTimePickerConfig
-                                      , defaultDateTimeI18n)
-import Date.Extra.Format as DateFormatter
-import Date.Extra.Config.Config_en_gb exposing (config)
-import DateParser
-import FormatNumber
-import FormatNumber.Locales as NumberLocales
 
 import Model
 import Message
+import View.PropertyList as Properties
+import View.DateTimePicker as DateTimePicker
+
 
 view : Model.Model -> Html Message.Message
 view model =
@@ -28,6 +20,7 @@ view model =
         , div []
               [ viewRemoteAstroData model.astro ]
         ]
+
 
 viewControlBlock : Model.Model -> Html Message.Message
 viewControlBlock model =
@@ -50,7 +43,7 @@ viewDateTimeControl model =
       [ div [ Attr.class "property-name"]
             [ text "Date & Time" ]
       , div [ Attr.class "property-value"]
-            [ viewDateTimePicker model ]
+            [ DateTimePicker.view model ]
       ]
 
 
@@ -150,6 +143,7 @@ viewPlanets astro =
                 ]
           ]
 
+
 viewStars : Model.AstroData -> Html Message.Message
 viewStars astro =
   div []
@@ -169,147 +163,19 @@ viewStars astro =
           ]
 
 
-formatMaybeDateTime : Maybe Date.Date -> String
-formatMaybeDateTime mbDT =
-  case mbDT of
-    Just dt -> DateFormatter.format config "%d/%m/%Y %H:%M %z" dt
-    Nothing -> "--"
-
-
-viewDateTimePicker : Model.Model -> Html Message.Message
-viewDateTimePicker model =
-  DateTimePicker.dateTimePickerWithConfig
-    dateTimePickerConfig
-    [ ]
-    model.datePickerState
-    (Just model.datetime)
-
-
-dateTimePickerConfig : Config (DatePickerConfig TimePickerConfig) Message.Message
-dateTimePickerConfig =
-    let defaultDateTimeConfig =
-            defaultDateTimePickerConfig Message.DateChange
-    in { defaultDateTimeConfig
-          | timePickerType = DateTimePicker.Config.Analog
-          , allowYearNavigation = True
-          , firstDayOfWeek = Date.Mon
-          , autoClose = True
-          , i18n = { defaultDateTimeI18n | inputFormat = customInputFormat }
-       }
-
-
-customDatePattern : String
-customDatePattern = "%d/%m/%Y %H:%M"
-
-
-formatNumber : Float -> String -> String
-formatNumber n units =
-  let str = FormatNumber.format NumberLocales.usLocale n
-  in str ++ units
-
-
-
-formatDecimalDegrees : Float -> String
-formatDecimalDegrees df =
-  let di = floor df
-      mf = 60 * (df - toFloat di)
-      mi = floor mf
-      sf = 60 * (mf - toFloat mi)
-  in (toString di) ++ "°"
-      ++ (toString mi) ++ "′"
-      ++ (formatNumber sf "″")
-
-
-formatMaybeDecimalDegrees : Maybe Float -> String -> String
-formatMaybeDecimalDegrees mbdd default =
-  case mbdd of
-    Just dd -> formatDecimalDegrees dd
-    Nothing -> default
-
-
-customInputFormat : DateTimePicker.Config.InputFormat
-customInputFormat =
-    { inputFormatter = DateFormatter.format config customDatePattern
-    , inputParser = DateParser.parse config customDatePattern >> Result.toMaybe
-    }
-
-
-type alias Property =
-  { name : String
-  , value : String
-  }
-
-
 viewPlanetai : String -> Model.Planetai -> Html Message.Message
 viewPlanetai caption planetai =
-  let props = appendPlanetaiProperties planetai []
-      formattedProps = List.map formatProperty props
-      formattedCaption = formatPropertyListCaption caption
+  let props = Properties.appendPlanetai planetai []
+      formattedProps = Properties.format props
+      formattedCaption = Properties.formatCaption caption
   in  div [ Attr.class "astro-item" ]
           (formattedCaption :: formattedProps)
 
 
 viewStar : String -> Model.Star -> Html Message.Message
 viewStar caption star  =
-  let props = appendStarProperties star []
-      formattedProps = List.map formatProperty props
-      formattedCaption = formatPropertyListCaption caption
+  let props = Properties.appendStar star []
+      formattedProps = Properties.format props
+      formattedCaption = Properties.formatCaption caption
   in  div [ Attr.class "astro-item" ]
           (formattedCaption :: formattedProps)
-
-
-formatPropertyListCaption : String -> Html Message.Message
-formatPropertyListCaption caption =
-  div [ Attr.class "property-caption" ]
-      [ h3 [] [ text caption ] ]
-
-formatProperty : Property -> Html Message.Message
-formatProperty prop =
-  div [ Attr.class "property-row" ]
-      [ div [ Attr.class "property-name"]
-            [ text prop.name ]
-      , div [ Attr.class "property-value"]
-            [ text prop.value ]
-      ]
-
-appendPlanetaiProperties : Model.Planetai -> List Property -> List Property
-appendPlanetaiProperties planetai props = props
-  |> appendHorizonCoordinatesProperties planetai.position
-  |> appendAngularSizeProperties planetai.angularSize
-  |> appendDistanceProperties planetai.distance
-  |> appendRiseSetProperties planetai.riseSet
-
-
-appendStarProperties : Model.Star -> List Property -> List Property
-appendStarProperties star props = props
-  |> appendHorizonCoordinatesProperties star.position
-  |> appendRiseSetProperties star.riseSet
-
-
-appendRiseSetProperties : Model.SetRise -> List Property -> List Property
-appendRiseSetProperties setRise props =
-  Property "Rise" (formatMaybeDateTime setRise.rise)
-  :: Property "Rise Azimuth" (formatMaybeDecimalDegrees setRise.riseAzimuth "--")
-  :: Property "Set" (formatMaybeDateTime setRise.set)
-  :: Property "Set Azimuth" (formatMaybeDecimalDegrees setRise.setAzimuth "--")
-  :: Property "State" setRise.state
-  :: props
-
-
-appendDistanceProperties : Model.Distance -> List Property -> List Property
-appendDistanceProperties distance props =
-  Property "Distance" (formatNumber distance.value distance.units)
-  :: props
-
-
-appendAngularSizeProperties : Float -> List Property -> List Property
-appendAngularSizeProperties size props =
-  Property "Angular Size" (formatDecimalDegrees size)
-  :: props
-
-
-appendHorizonCoordinatesProperties : Model.HorizonCoordinates -> List Property -> List Property
-appendHorizonCoordinatesProperties hc props =
-  Property "Altitude" (formatDecimalDegrees hc.altitude)
-  :: Property "Azimuth" (formatDecimalDegrees hc.azimuth)
-  :: props
