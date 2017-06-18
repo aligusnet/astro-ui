@@ -93,8 +93,6 @@ viewGeoLocationControl =
             [ button [ onClick Message.GetGeolocation ]
                      [ text "Get current geolocation" ]
             ]
-      , div [ ]
-            [text "Please use secure connection (https) to obtain your coordinates, otherwise it might not work"]
       ]
 
 
