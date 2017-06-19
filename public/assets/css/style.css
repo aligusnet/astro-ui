@@ -48,7 +48,7 @@ Global
 	max-width: 500px;
 }
 .control-block input {
-	width: 100%;
+	width: 90%;
 }
 #datetime-control {
 	margin-bottom: 5px;
@@ -58,7 +58,7 @@ Global
 	display: flex;
   justify-content: flex-end;
 	align-items: flex-end;
-	margin: 10px auto 20px auto;
+	margin: 10px 10px 20px auto;
 }
 #query-data {
 	display: flex;
