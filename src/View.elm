@@ -14,9 +14,7 @@ import View.DateTimePicker as DateTimePicker
 view : Model.Model -> Html Message.Message
 view model =
     div [ Attr.class "wrapper" ]
-        [ h1 [] [ text "Astro" ]
-        , viewControlBlock model
-
+        [ viewControlBlock model
         , div []
               [ viewRemoteAstroData model.astro ]
         ]
