@@ -3,7 +3,8 @@ AWS.config.credentials = new AWS.CognitoIdentityCredentials({IdentityPoolId: 'us
 
 const lambda = new AWS.Lambda({region: 'us-east-1', apiVersion: '2015-03-31'});
 
-let app = Elm.Main.fullscreen();
+var node = document.getElementById('astro');
+var app = Elm.Main.embed(node);
 
 app.ports.fetchAstroData.subscribe(function(request) {
   console.log(JSON.stringify(request));
